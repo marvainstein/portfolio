@@ -793,11 +793,11 @@ noscript { position: fixed; inset: auto 12px 12px; z-index: 50; background: var(
 <nav class="dock" id="dock" aria-label="Proyectos">
   <span class="dock-label mono">Proyectos</span>
   <ul>
+    <li><button class="chip" type="button" data-open="ley" style="--c:#2F6B4A"><i></i>72 bancas</button></li>
     <li><button class="chip" type="button" data-open="estela" style="--c:#C2553A"><i></i>Estela</button></li>
     <li><button class="chip" type="button" data-open="camara" style="--c:#B8763A"><i></i>camera.app</button></li>
     <li><button class="chip" type="button" data-open="banana" style="--c:#FFC93C"><i></i>Banana</button></li>
     <li><button class="chip" type="button" data-open="cumple" style="--c:#E8559A"><i></i>Wishlist</button></li>
-    <li><button class="chip" type="button" data-open="ley" style="--c:#2F6B4A"><i></i>72 bancas</button></li>
   </ul>
 </nav>
 
@@ -846,6 +846,19 @@ function spring({ from = 0, to = 1, stiffness = 180, damping = 18, mass = 1, vel
 
 /* ---------- los proyectos ---------- */
 const PROJECTS = [
+  {
+    id: 'ley', name: '72 bancas', acc: 'var(--ley)', meta: ['Web', 'un solo archivo'],
+    tagline: 'Escribirle a un senador, en un clic.',
+    lede: 'Una herramienta cívica para la votación de la ley que cambiaba el régimen de tierras rurales: elegís a quién escribirle y se abre tu mail, X o el teléfono con todo cargado.',
+    details: [
+      '<b>Cada parcela es una banca</b>: los 72 senadores agrupados por provincia, coloreados según el último relevamiento.',
+      'Los mails salen <b>en tandas de 8</b> y cada tanda con un enfoque distinto, para que no lleguen 500 mensajes iguales.',
+      '<b>Un solo HTML</b>, sin build ni dependencias, para poder publicarlo en una tarde.',
+    ],
+    stack: ['HTML', 'CSS', 'JavaScript', 'sin framework'],
+    links: [['Ver el sitio ↗', 'https://marvainstein.github.io/leydeextranjerizaciondetierras/', true], ['Código ↗', 'https://github.com/marvainstein/leydeextranjerizaciondetierras']],
+    media: () => MEDIA.ley(),
+  },
   {
     id: 'estela', name: 'Estela', acc: 'var(--estela)', meta: ['App de iOS', 'Android en camino'],
     tagline: 'La historia de su salud en un solo lugar.',
@@ -898,19 +911,6 @@ const PROJECTS = [
     links: [['Ver el sitio ↗', 'https://marvainstein.github.io/wishlistcumple-/', true], ['Código ↗', 'https://github.com/marvainstein/wishlistcumple-']],
     media: () => MEDIA.cumple(),
   },
-  {
-    id: 'ley', name: '72 bancas', acc: 'var(--ley)', meta: ['Web', 'un solo archivo'],
-    tagline: 'Escribirle a un senador, en un clic.',
-    lede: 'Una herramienta cívica para la votación de la ley que cambiaba el régimen de tierras rurales: elegís a quién escribirle y se abre tu mail, X o el teléfono con todo cargado.',
-    details: [
-      '<b>Cada parcela es una banca</b>: los 72 senadores agrupados por provincia, coloreados según el último relevamiento.',
-      'Los mails salen <b>en tandas de 8</b> y cada tanda con un enfoque distinto, para que no lleguen 500 mensajes iguales.',
-      '<b>Un solo HTML</b>, sin build ni dependencias, para poder publicarlo en una tarde.',
-    ],
-    stack: ['HTML', 'CSS', 'JavaScript', 'sin framework'],
-    links: [['Ver el sitio ↗', 'https://marvainstein.github.io/leydeextranjerizaciondetierras/', true], ['Código ↗', 'https://github.com/marvainstein/leydeextranjerizaciondetierras']],
-    media: () => MEDIA.ley(),
-  },
 ];
 const CONTACT = { id: 'hola', name: 'Escribime', acc: 'var(--mail)' };
 
@@ -933,8 +933,9 @@ const sky = x => along(SKYLINE, x);
 // Dónde vive cada uno, en píxeles de la foto. Los de la cima, parados sobre
 // la línea de las colinas; los demás, en el prado.
 const SPOTS = {
-  wide: { banana: [1100, sky(1100) + 30], ley: [170, 500], estela: [330, 640], camara: [540, 650], cumple: [880, 640], hola: [1232, 668] },
-  tall: { banana: [851, sky(851) + 26], ley: [690, sky(690) + 42], estela: [580, 612], camara: [700, 638], hola: [790, 596], cumple: [872, 622] },
+  // De izquierda a derecha, en el orden en que se numeran los proyectos.
+  wide: { ley: [170, 500], estela: [330, 640], camara: [540, 650], banana: [880, 640], cumple: [1100, sky(1100) + 30], hola: [1232, 668] },
+  tall: { ley: [580, 612], estela: [690, sky(690) + 42], camara: [700, 638], hola: [790, 596], banana: [851, sky(851) + 26], cumple: [872, 622] },
 };
 let W = 0, H = 0, mode = 'wide', map = null;
 const things = {};
@@ -953,7 +954,9 @@ function placePhoto() {
 }
 function placeCast() {
   const cs = mode === 'tall' ? Math.min(76, W * .2) : H < 560 ? Math.max(58, H * .17) : Math.max(100, Math.min(168, W * .098, H * .17));
-  for (const [id, el] of Object.entries(things)) {
+  // En el orden de los proyectos, así Tab los recorre igual que la vista.
+  for (const id of [...PROJECTS.map(p => p.id), 'hola']) {
+    const el = things[id];
     el.hidden = !SPOTS[mode][id];
     if (el.hidden) continue;
     const [ix, iy] = SPOTS[mode][id];
@@ -1730,7 +1733,7 @@ function initBanana(signal) {
 /* ---------- una pista para empezar ---------- */
 // A los pocos segundos, cada personaje dice su nombre, de a uno.
 if (!reduce) {
-  ['estela', 'camara', 'banana', 'cumple', 'ley'].forEach((id, k) => setTimeout(() => {
+  ['ley', 'estela', 'camara', 'banana', 'cumple'].forEach((id, k) => setTimeout(() => {
     if (!win.hidden) return;
     things[id].classList.add('peek');
     setTimeout(() => things[id].classList.remove('peek'), 1300);
