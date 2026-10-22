@@ -180,24 +180,9 @@ button { font: inherit; color: inherit; }
 .mail .letter { transition: transform .4s cubic-bezier(.3,1.6,.5,1); }
 .mail:hover .letter { transform: translate(-4px, -10px) rotate(-8deg); }
 
-/* ---------- arriba ---------- */
-.top {
-  position: fixed; z-index: 20; top: max(12px, env(safe-area-inset-top)); left: 50%; translate: -50% 0; width: min(760px, calc(100vw - 24px));
-  display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 6px 6px 6px 8px;
-  background: rgba(14,16,40,.88); border-radius: 18px; box-shadow: 0 10px 30px -12px rgba(0,0,30,.6);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-}
-.brand { display: inline-flex; align-items: center; gap: 9px; color: #fff; text-decoration: none; font-weight: 600; font-size: 14.5px; padding-right: 6px; }
-.logo-dot { width: 28px; height: 28px; border-radius: 9px; background: var(--banana); color: var(--ink); display: grid; place-items: center; font: italic 500 16px var(--serif); font-variation-settings: "WONK" 1; }
-.top nav { display: flex; gap: 2px; align-items: center; }
-.top nav button { background: none; border: 0; color: rgba(255,255,255,.78); font-size: 14px; padding: 7px 10px; border-radius: 10px; cursor: pointer; }
-.top nav button:hover { color: #fff; background: rgba(255,255,255,.08); }
-.top .cta { background: #fff; color: #111; font-weight: 600; font-size: 14px; border: 0; border-radius: 12px; padding: 8px 14px; cursor: pointer; }
-.top .cta:hover { background: #F3F0FF; }
-
 /* ---------- la bienvenida ---------- */
 .intro {
-  position: fixed; z-index: 5; left: 50%; top: clamp(92px, 15vh, 150px); translate: -50% 0; width: min(760px, calc(100vw - 40px));
+  position: fixed; z-index: 5; left: 50%; top: clamp(90px, 20vh, 220px); translate: -50% 0; width: min(760px, calc(100vw - 40px));
   text-align: center; color: #fff; pointer-events: none; transition: opacity .4s, translate .5s cubic-bezier(.2,.7,.3,1);
 }
 .intro.away { opacity: 0; translate: -50% -14px; }
@@ -205,21 +190,26 @@ button { font: inherit; color: inherit; }
 .wave { display: inline-block; transform-origin: 70% 80%; animation: hi 2.6s ease-in-out 1.2s 2; }
 @keyframes hi { 0%, 60%, 100% { transform: rotate(0) } 10%, 30% { transform: rotate(16deg) } 20%, 40% { transform: rotate(-8deg) } }
 h1 { margin: 0; line-height: .98; text-shadow: 0 2px 24px rgba(10,20,90,.25); }
-h1 .l1 { display: block; font: 700 clamp(38px, 6vw, 82px)/1 var(--sans); letter-spacing: -.045em; }
-h1 .l2 { display: block; font: italic 400 clamp(40px, 6.3vw, 88px)/1.04 var(--serif); letter-spacing: -.03em; font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+h1 .l1 { display: block; width: fit-content; margin: 0 auto; font: 700 clamp(38px, 6vw, 82px)/1 var(--sans); letter-spacing: -.045em; }
+h1 .l2 { display: block; width: fit-content; margin: 0 auto; font: italic 400 clamp(40px, 6.3vw, 88px)/1.04 var(--serif); letter-spacing: -.03em; font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
 .lede { margin: 16px auto 0; font-size: clamp(15.5px, 1.4vw, 18px); font-weight: 500; color: #fff; max-width: 44ch; text-shadow: 0 1px 2px rgba(10,25,110,.45), 0 2px 18px rgba(10,25,110,.5); }
 .hint {
-  position: fixed; z-index: 6; left: 16px; top: 78px; margin: 0;
-  display: inline-flex; align-items: center; gap: 8px; pointer-events: none;
-  background: rgba(11,11,18,.82); color: #fff; border-radius: 99px; padding: 7px 14px 7px 10px; font-weight: 600; font-size: 13px;
-  box-shadow: 0 10px 22px -10px rgba(0,0,40,.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  transition: opacity .4s;
+  /* Una burbuja de historieta que dice el sol. placeHint() la pone abajo o
+     al costado del sol, donde no tape nada, y apunta la colita hacia él. */
+  position: fixed; z-index: 6; left: 0; top: 0; margin: 0; pointer-events: none;
+  background: #fff; color: var(--text); border: 3px solid var(--ink); border-radius: 22px;
+  padding: 9px 16px 10px; font: 700 14px/1.3 var(--sans); text-align: center; white-space: nowrap;
+  box-shadow: 0 4px 0 var(--ink), 0 14px 26px -12px rgba(10,20,80,.5);
+  transform-origin: var(--ox, 50%) var(--oy, 0%); rotate: -2deg;
+  animation: bubble 3.2s ease-in-out infinite; transition: opacity .4s;
 }
-.hint .short { display: none; }
+.hint::after { content: ""; position: absolute; width: 14px; height: 14px; background: #fff; border: 3px solid var(--ink); border-right: 0; border-bottom: 0; }
+.hint.tail-up::after { left: calc(var(--tail, 50%) - 7px); top: -9.5px; rotate: 45deg; }
+.hint.tail-right::after { right: -9.5px; top: calc(50% - 7px); rotate: 135deg; }
 .intro.away + .hint { opacity: 0; }
-@media (max-width: 900px), (max-height: 560px) { .hint .long { display: none; } .hint .short { display: inline; } }
-.hint .hand { display: inline-block; animation: point 1.4s ease-in-out infinite; }
-@keyframes point { 50% { transform: translate(0, 4px) } }
+.hint .b-short { display: none; }
+@media (max-height: 560px) and (min-aspect-ratio: 9/10) { .hint .b-long { display: none; } .hint .b-short { display: inline; } .hint { padding: 6px 13px 7px; font-size: 13px; } }
+@keyframes bubble { 50% { transform: translateY(-4px) rotate(1.5deg); } }
 
 /* ---------- el muelle: los cinco proyectos, en lista ---------- */
 .dock {
@@ -543,7 +533,6 @@ noscript { position: fixed; inset: auto 12px 12px; z-index: 50; background: var(
   .win { max-height: calc(100svh - 24px); }
 }
 @media (max-aspect-ratio: 9/10) {
-  .intro { top: 78px; }
   .hello { margin-bottom: 10px; }
   h1 .l1 { font-size: clamp(32px, 9.4vw, 48px); }
   h1 .l2 { font-size: clamp(34px, 10vw, 52px); }
@@ -557,20 +546,15 @@ noscript { position: fixed; inset: auto 12px 12px; z-index: 50; background: var(
 /* Pantallas bajas y anchas (un teléfono acostado): la bienvenida se achica
    para que la colina tenga lugar. */
 @media (max-height: 560px) and (min-aspect-ratio: 9/10) {
-  .top { top: 8px; padding: 4px 4px 4px 6px; }
-  .intro { top: 56px; }
   .hello, .lede { display: none; }
   h1 .l1 { font-size: clamp(22px, 7.4vh, 40px); }
   h1 .l2 { font-size: clamp(24px, 8vh, 44px); }
-  .hint { top: 54px; }
   .dock { bottom: 8px; padding: 4px; }
   .chip { padding: 5px 9px; font-size: 13px; }
   .dock-label { display: none; }
   .sun { width: clamp(64px, 16vh, 110px); }
 }
 @media (max-width: 480px) {
-  .brand-name { display: none; }
-  .top nav .opt { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
@@ -798,19 +782,13 @@ noscript { position: fixed; inset: auto 12px 12px; z-index: 50; background: var(
   </button>
 </div>
 
-<header class="top">
-  <a class="brand" href="#" id="home" aria-label="Martín Vainstein, inicio"><span class="logo-dot" aria-hidden="true">m</span><span class="brand-name">Martín Vainstein</span></a>
-  <nav aria-label="Atajos">
-    <button class="cta" type="button" data-open="hola">Escribime</button>
-  </nav>
-</header>
 
 <section class="intro" id="intro" aria-labelledby="hi">
   <p class="hello mono"><span class="wave" aria-hidden="true">👋</span> Hola, soy Martín</p>
   <h1 id="hi"><span class="l1">Hago software chico</span><span class="l2">con mucho cuidado.</span></h1>
   <p class="lede">Apps de iOS, herramientas de escritorio y sitios que hacen una cosa, bien. Cada proyecto vive en esta colina.</p>
 </section>
-<p class="hint" id="hint"><span class="hand" aria-hidden="true">👇</span><span class="long">Tocá a cualquiera para abrir su proyecto</span><span class="short">Tocá a cualquiera</span></p>
+<p class="hint" id="hint"><span class="b-long">¡Tocá a cualquiera<br>para abrir su proyecto!</span><span class="b-short">¡Tocá a cualquiera!</span></p>
 
 <nav class="dock" id="dock" aria-label="Proyectos">
   <span class="dock-label mono">Proyectos</span>
@@ -956,8 +934,7 @@ const sky = x => along(SKYLINE, x);
 // la línea de las colinas; los demás, en el prado.
 const SPOTS = {
   wide: { banana: [1100, sky(1100) + 30], ley: [170, 500], estela: [330, 640], camara: [540, 650], cumple: [880, 640], hola: [1232, 668] },
-  // En el celu el buzón no va: "Escribime" ya está en la barra de arriba.
-  tall: { banana: [851, sky(851) + 26], ley: [690, sky(690) + 42], estela: [580, 612], camara: [708, 636], cumple: [866, 618], hola: null },
+  tall: { banana: [851, sky(851) + 26], ley: [690, sky(690) + 42], estela: [580, 612], camara: [700, 638], hola: [790, 596], cumple: [872, 622] },
 };
 let W = 0, H = 0, mode = 'wide', map = null;
 const things = {};
@@ -1027,14 +1004,45 @@ function placeTags() {
     tag.style.setProperty('--tx', (pick === 'up' || pick === 'd' ? Math.round(sx) : 0) + 'px');
   }
 }
+// La bienvenida baja hasta el medio del cielo que queda libre arriba de
+// los personajes que tiene debajo, sin llegar a tocarlos.
+function placeIntro() {
+  const intro = $('#intro');
+  intro.style.top = '0px';
+  const parts = ['.hello', 'h1 .l1', 'h1 .l2', '.lede'].map(q => intro.querySelector(q)).filter(e => e && getComputedStyle(e).display !== 'none').map(e => e.getBoundingClientRect());
+  const left = Math.min(...parts.map(r => r.left)) - 24, right = Math.max(...parts.map(r => r.right)) + 24, h = intro.offsetHeight;
+  const under = Object.values(things).filter(el => !el.hidden).map(el => el.getBoundingClientRect()).filter(r => r.right > left && r.left < right);
+  // En el celu, debajo del texto van el sol y su burbuja.
+  const room = mode === 'tall' ? 120 : 34;
+  const floor = Math.min(H * .7, ...under.map(r => r.top)) - room;
+  const top = Math.min(floor - h, Math.max(mode === 'tall' ? 32 : 24, (floor - h) * .6));
+  intro.style.top = Math.max(12, Math.round(top)) + 'px';
+}
+function placeHint() {
+  const hint = $('#hint'), sun = $('#sun').getBoundingClientRect(), w = hint.offsetWidth, h = hint.offsetHeight, pad = 10;
+  const avoid = ['#intro .hello', '#intro h1 .l1', '#intro h1 .l2', '#intro .lede', '#dock'].map(q => $(q)).filter(e => e && getComputedStyle(e).display !== 'none').map(e => e.getBoundingClientRect())
+    .concat(Object.values(things).filter(el => !el.hidden).map(el => el.getBoundingClientRect()));
+  const bad = r => r.left < pad || r.right > innerWidth - pad || r.top < pad || r.bottom > innerHeight - pad ||
+    avoid.some(b => r.left < b.right + 8 && r.right > b.left - 8 && r.top < b.bottom + 8 && r.bottom > b.top - 8);
+  const cx = sun.left + sun.width / 2;
+  const bx = Math.max(pad, Math.min(innerWidth - pad - w, cx - w / 2));
+  const spots = [
+    { cls: 'tail-up', left: bx, top: sun.bottom + 12, tail: cx - bx },
+    { cls: 'tail-right', left: sun.left - 16 - w, top: sun.top + sun.height / 2 - h / 2 },
+  ].map(sp => Object.assign(sp, { right: sp.left + w, bottom: sp.top + h }));
+  const sp = spots.find(x => !bad(x)) || spots[0];
+  hint.className = 'hint ' + sp.cls;
+  hint.style.left = Math.round(sp.left) + 'px'; hint.style.top = Math.round(sp.top) + 'px';
+  if (sp.tail != null) hint.style.setProperty('--tail', Math.round(Math.max(22, Math.min(w - 22, sp.tail))) + 'px');
+  hint.style.setProperty('--ox', sp.cls === 'tail-up' ? (sp.tail ?? w / 2) + 'px' : '100%');
+  hint.style.setProperty('--oy', sp.cls === 'tail-up' ? '0%' : '50%');
+}
 function placeSun() {
   if (mode === 'tall') {
     const b = $('#intro').getBoundingClientRect().bottom;
-    $('#hint').style.top = Math.round(b + 18) + 'px';
     scene.style.setProperty('--sx', '80%');
     scene.style.setProperty('--sy', Math.round(b + 58) + 'px');
   } else {
-    $('#hint').style.top = '';
     scene.style.setProperty('--sx', '84%');
     scene.style.setProperty('--sy', '22%');
   }
@@ -1094,12 +1102,12 @@ function layout() {
   W = scene.clientWidth; H = scene.clientHeight;
   if (!W || !H) return; // todavía sin tamaño: el próximo resize lo dibuja
   mode = W / H < .9 ? 'tall' : 'wide';
-  placePhoto(); placeCast(); placeSun(); clouds(); life();
+  placePhoto(); placeCast(); placeIntro(); placeSun(); placeHint(); clouds(); life();
 }
 let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(layout, 80); });
 sunSpikes();
 layout();
-document.fonts?.ready.then(() => { placeSun(); placeTags(); });
+document.fonts?.ready.then(() => { placeIntro(); placeSun(); placeHint(); placeTags(); });
 
 /* ---------- profundidad: la escena sigue al puntero (o al teléfono) ---------- */
 let tx = 0, ty = 0, cx = 0, cy = 0, praf = 0;
@@ -1265,7 +1273,6 @@ addEventListener('keydown', e => {
     else if (!e.shiftKey && document.activeElement === f.at(-1)) { e.preventDefault(); f[0].focus(); }
   }
 });
-$('#home').addEventListener('click', e => { e.preventDefault(); closeProject(); });
 
 /* ---------- lo interactivo dentro de cada ventana ----------
    Cada proyecto trae una demo que se puede usar, no una captura. */
